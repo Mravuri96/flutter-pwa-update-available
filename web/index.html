@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="description" content="A new Flutter project." />
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta
+      name="apple-mobile-web-app-title"
+      content="flutter_web_pwa_update_available"
+    />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <title>flutter_web_pwa_update_available</title>
+    <link rel="manifest" href="manifest.json" />
+  </head>
+  <body>
+    <!-- This script installs service_worker.js to provide PWA functionality to
+       application. For more information, see:
+       https://developers.google.com/web/fundamentals/primers/service-workers -->
+    <!-- <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('flutter_service_worker.js');
+      });
+    }
+  </script> -->
+
+    <script>
+      function _beginServiceWorkerUpdateFlow(registration) {
+        if (
+          window.confirm("New version of the app is available. Refresh now?") &&
+          registration.waiting
+        ) {
+          // let waiting Service Worker know it should become active
+          registration.waiting.postMessage("skipWaiting");
+        }
+      }
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("flutter_service_worker.js").then(
+            function (registration) {
+              if (registration.waiting) {
+                _beginServiceWorkerUpdateFlow(registration);
+              }
+
+              // detect Service Worker update available and wait for it to install
+              registration.addEventListener("updatefound", () => {
+                if (registration.installing) {
+                  // wait until the new Service worker is actually installed
+                  registration.installing.addEventListener(
+                    "statechange",
+                    () => {
+                      if (registration.waiting) {
+                        // if there's an existing Service Worker, show the prompt
+                        if (navigator.serviceWorker.controller) {
+                          _beginServiceWorkerUpdateFlow(registration);
+                        } else {
+                          // otherwise it's the first install, there is nothing to do
+                          console.log(
+                            "Service Worker initialized for the first time"
+                          );
+                        }
+                      }
+                    }
+                  );
+                }
+              });
+
+              let refreshing = false;
+
+              // detect controller change and refresh the page
+              navigator.serviceWorker.addEventListener(
+                "controllerchange",
+                () => {
+                  if (!refreshing) {
+                    window.location.reload(true);
+                    refreshing = true;
+                  }
+                }
+              );
+            },
+            function (err) {
+              // registration failed :(
+              console.log("ServiceWorker registration failed: ", err);
+            }
+          );
+        });
+      }
+    </script>
+
+    <script src="main.dart.js" type="application/javascript"></script>
+  </body>
+</html>
