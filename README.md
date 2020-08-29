@@ -1,9 +1,10 @@
-# Problem
-### A new updated Service worker doesn't take over until a user clears the browser cache, hard reloads, quits the entire browser.
-![](https://i.imgur.com/EDoKSOn.png)
+### Currently a new updated Service worker doesn't take over until a user clears the browser cache, or leaves the current tab or quits the browser.
 
-# Solution
-### Prompting the user if they would like to update the app before using it
+![skipWaiting](https://i.imgur.com/EDoKSOn.png)
+
+## Solution
+### This template will show a notification each time that there is a new version of the service worker is available. This will ensure that a user is up to date and has the latest version of any cached files.
+
 ![](https://i.imgur.com/lJBUNAd.png)
 
 # [Demo](https://i.imgur.com/Nmdspu0.mp4)
